@@ -1,6 +1,7 @@
 package io.agileintellligence.fullstack.web;
 
 import io.agileintellligence.fullstack.domain.Project;
+import io.agileintellligence.fullstack.services.MapValidationErrorService;
 import io.agileintellligence.fullstack.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,18 +22,16 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
+    @Autowired
+    private MapValidationErrorService mapValidationErrorService;
+
     @PostMapping("")
     public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult result)
     {
-        if(result.hasErrors())
-        {
-            Map<String, String> mp = new HashMap<String, String>();
-            for(FieldError error:result.getFieldErrors())
-            {
-               mp.put(error.getField(), error.getDefaultMessage());
-            }
-            return new ResponseEntity<Map<String, String>>(mp,HttpStatus.BAD_REQUEST);
-        }
+        ResponseEntity<?> error = mapValidationErrorService.MapValidationErrorService(result);
+        if(error != null)
+            return error;
+
         Project project1 = projectService.saveOrUpdateProject(project);
         return new ResponseEntity<>(project1, HttpStatus.CREATED);
     }
