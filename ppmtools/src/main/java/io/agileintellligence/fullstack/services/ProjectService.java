@@ -49,5 +49,13 @@ public void deleteProjectByProjectIdentifier(String projectId)
     projectRepository.delete(project);
 //    return "Project " + projectId + "has been deleted SuccessFully";
 }
+public Project updateProject(String projectId,Project project)
+{
+    Project project1 = findByProjectIdentifier(projectId);
+    projectRepository.delete(project1);
+    projectRepository.save(project);
+    return project;
+}
+
 
 }

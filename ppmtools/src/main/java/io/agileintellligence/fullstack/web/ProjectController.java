@@ -52,7 +52,17 @@ public class ProjectController {
        projectService.deleteProjectByProjectIdentifier(projectId);
         return new ResponseEntity<String>("Project with " + projectId + " Successfully deleted", HttpStatus.OK);
     }
+    @PutMapping("/{projectId}")
+    public ResponseEntity<?> UpdateProject(@PathVariable String projectId,@RequestBody Project project, BindingResult result)
+    {
 
+
+        Project project1 = projectService.findByProjectIdentifier(projectId.toUpperCase());
+        if(project1 == null)
+            return new ResponseEntity<String>("Project with ID " + projectId + "Does not exists",HttpStatus.NOT_FOUND);
+        Project project2=projectService.updateProject(projectId,project);
+        return new ResponseEntity<>(project2, HttpStatus.CREATED);
+    }
 
 
 
