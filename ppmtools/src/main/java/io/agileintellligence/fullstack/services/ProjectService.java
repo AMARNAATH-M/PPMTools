@@ -6,6 +6,8 @@ import io.agileintellligence.fullstack.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProjectService {
 
@@ -32,6 +34,10 @@ public Project findByProjectIdentifier(String projectId)
         throw new ProjectIdException("Project ID " + projectId + " Does not exist");
     }
     return project;
+}
+public Iterable<Project> findAllProjects()
+{
+    return  projectRepository.findAll();
 }
 
 }
