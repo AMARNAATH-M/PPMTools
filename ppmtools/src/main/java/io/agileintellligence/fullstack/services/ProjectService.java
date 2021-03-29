@@ -1,7 +1,9 @@
 package io.agileintellligence.fullstack.services;
 
+import io.agileintellligence.fullstack.domain.Backlog;
 import io.agileintellligence.fullstack.domain.Project;
 import io.agileintellligence.fullstack.exceptions.ProjectIdException;
+import io.agileintellligence.fullstack.repositories.BacklogRepository;
 import io.agileintellligence.fullstack.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,11 +16,25 @@ public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
 
+    @Autowired
+    private BacklogRepository backlogRepository;
+
 public Project saveOrUpdateProject(Project project)
 {
    try
    {
        project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
+    if(project.getId() == null)
+   {
+       Backlog backlog = new Backlog();
+       project.setBacklog(backlog);
+       backlog.setProject(project);
+       backlog.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
+  }
+    if(project.getId() != null)
+    {
+        project.setBacklog(backlogRepository.findByProjectIdentifier(project.getProjectIdentifier().toUpperCase()));
+    }
        return projectRepository.save(project);
    }catch(Exception e)
    {
