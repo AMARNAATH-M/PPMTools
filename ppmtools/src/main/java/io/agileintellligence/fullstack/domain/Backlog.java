@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -16,23 +18,21 @@ public class Backlog {
     @Column(insertable = false,updatable=false)
     private int project_id;
 
+
+
     public Backlog() {
     }
 
     //OnetoOne with Project
     @OneToOne(fetch=FetchType.EAGER)
-   @JoinColumn(name ="project_id",nullable=false)
+    @JoinColumn(name ="project_id",nullable=false)
     @JsonIgnore
     private Project project;
 
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
-    }
 
     //OnetoMany with ProjectTask
+    @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.EAGER,mappedBy="backlog")
+    private List<ProjectTask> projectTasks = new ArrayList<>();
+    
 
 }

@@ -1,6 +1,7 @@
 package io.agileintellligence.fullstack.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -30,9 +31,19 @@ public class ProjectTask {
     @UpdateTimestamp
     @JsonFormat(pattern="yyyy-mm-dd")
     private Date updated_At;
-    //Many to One With BackLog
     @Column(updatable = false)
     private String projectIdentifier;
+    @Column(insertable = false,updatable=false)
+    private int backlog_id;
+
+
+    //Many to One With BackLog
+    @ManyToOne(fetch=FetchType.EAGER,cascade=CascadeType.REFRESH)
+    @JoinColumn(name="backlog_id",updatable=false,nullable=false)
+    @JsonIgnore
+    private Backlog backlog;
+
+
 
 
 }
