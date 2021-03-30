@@ -8,8 +8,6 @@ import io.agileintellligence.fullstack.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class ProjectService {
 
@@ -19,59 +17,52 @@ public class ProjectService {
     @Autowired
     private BacklogRepository backlogRepository;
 
-public Project saveOrUpdateProject(Project project)
-{
-   try
-   {
-       project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
-    if(project.getId() == null)
-   {
-       Backlog backlog = new Backlog();
-       project.setBacklog(backlog);
-       backlog.setProject(project);
-       backlog.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
-  }
-    if(project.getId() != null)
-    {
-        project.setBacklog(backlogRepository.findByProjectIdentifier(project.getProjectIdentifier().toUpperCase()));
-    }
-       return projectRepository.save(project);
-   }catch(Exception e)
-   {
-       throw new ProjectIdException("PROJECT ID " + project.getProjectIdentifier().toUpperCase() + " already exists");
-   }
+    public Project saveOrUpdateProject(Project project) {
+        try {
+            project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
+            if (project.getId() == null) {
+                Backlog backlog = new Backlog();
+                project.setBacklog(backlog);
+                backlog.setProject(project);
+                backlog.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
+            }
+            if (project.getId() != null) {
+                project.setBacklog(backlogRepository.findByProjectIdentifier(project.getProjectIdentifier().toUpperCase()));
+            }
+            return projectRepository.save(project);
+        } catch (Exception e) {
+            throw new ProjectIdException("PROJECT ID " + project.getProjectIdentifier().toUpperCase() + " already exists");
+        }
 
-}
-public Project findByProjectIdentifier(String projectId)
-{
-    Project project = projectRepository.findByProjectIdentifier(projectId.toUpperCase());
-    if(project == null)
-    {
-        throw new ProjectIdException("Project ID " + projectId + " Does not exist");
     }
-    return project;
-}
-public Iterable<Project> findAllProjects()
-{
-    return  projectRepository.findAll();
-}
-public void deleteProjectByProjectIdentifier(String projectId)
-{
-    Project project = projectRepository.findByProjectIdentifier(projectId);
-    if(project == null)
-    {
-        throw new ProjectIdException("Project ID " + projectId + " does not exist");
+
+    public Project findByProjectIdentifier(String projectId) {
+        Project project = projectRepository.findByProjectIdentifier(projectId.toUpperCase());
+        if (project == null) {
+            throw new ProjectIdException("Project ID " + projectId + " Does not exist");
+        }
+        return project;
     }
-    projectRepository.delete(project);
+
+    public Iterable<Project> findAllProjects() {
+        return projectRepository.findAll();
+    }
+
+    public void deleteProjectByProjectIdentifier(String projectId) {
+        Project project = projectRepository.findByProjectIdentifier(projectId);
+        if (project == null) {
+            throw new ProjectIdException("Project ID " + projectId + " does not exist");
+        }
+        projectRepository.delete(project);
 //    return "Project " + projectId + "has been deleted SuccessFully";
-}
-public Project updateProject(String projectId,Project project)
-{
-    Project project1 = findByProjectIdentifier(projectId);
-    projectRepository.delete(project1);
-    projectRepository.save(project);
-    return project;
-}
+    }
+
+    public Project updateProject(String projectId, Project project) {
+        Project project1 = findByProjectIdentifier(projectId);
+        projectRepository.delete(project1);
+        projectRepository.save(project);
+        return project;
+    }
 
 
 }
