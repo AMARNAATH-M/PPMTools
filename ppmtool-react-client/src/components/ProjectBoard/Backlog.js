@@ -13,7 +13,7 @@ export default class Backlog extends Component {
     let doneItems = [];
 
     for (let i = 0; i < tasks.length; i++) {
-      console.log(tasks[i].priority);
+      // console.log(tasks[i].priority);
       if (tasks[i].props.project_task.status == "TO_DO") {
         todoItems.push(tasks[i]);
       }
