@@ -24,6 +24,11 @@ function App() {
           <Route exact path="/updateProject/:id" component={UpdateProject} />
           <Route exact path="/projectBoard/:id" component={ProjectBoard} />
           <Route exact path="/addProjectTask/:id" component={AddProjectTask} />
+          <Route
+            exact
+            path="/addProjectTask/projectBoard/:id"
+            component={ProjectBoard}
+          />
         </div>
       </Router>
     </Provider>
