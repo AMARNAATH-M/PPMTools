@@ -47,12 +47,18 @@ public class BacklogController {
     }
 
     @PatchMapping("/{backlog_id}/{pt_id}")
-    public ResponseEntity<?> updateProject(@Valid @RequestBody ProjectTask projectTask1, @PathVariable String backlog_id, @PathVariable String pt_id, BindingResult result) {
+    public ResponseEntity<?> updateProjectTask(@Valid @RequestBody ProjectTask projectTask, BindingResult result,
+                                               @PathVariable String backlog_id, @PathVariable String pt_id ){
+
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationErrorService(result);
         if (errorMap != null) return errorMap;
-        ProjectTask updatedProject = projectTaskService.updateProject(projectTask1, backlog_id, pt_id);
-        return new ResponseEntity<ProjectTask>(updatedProject, HttpStatus.OK);
+
+        ProjectTask updatedTask = projectTaskService.updateProject(projectTask,backlog_id,pt_id);
+
+        return new ResponseEntity<ProjectTask>(updatedTask,HttpStatus.OK);
+
     }
+
 
     @DeleteMapping("/{backlog_id}/{pt_id}")
     public ResponseEntity<?> deleteProject(@PathVariable String backlog_id, @PathVariable String pt_id) {

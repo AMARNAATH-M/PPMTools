@@ -84,6 +84,7 @@ public class ProjectTaskService {
 
     public ProjectTask updateProject(ProjectTask updatedProject, String backlog_id, String sequence) {
         ProjectTask projectTask1 = findByProjectSequence(backlog_id, sequence);
+
         projectTask1 = updatedProject;
         return projectTaskRepository.save(projectTask1);
     }
