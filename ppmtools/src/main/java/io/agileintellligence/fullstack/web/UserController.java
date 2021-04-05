@@ -3,6 +3,7 @@ package io.agileintellligence.fullstack.web;
 import io.agileintellligence.fullstack.domain.User;
 import io.agileintellligence.fullstack.services.MapValidationErrorService;
 import io.agileintellligence.fullstack.services.UserService;
+import io.agileintellligence.fullstack.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +25,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserValidator userValidator;
+
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody User user, BindingResult result)
     {
         //Validate Passwords Match
+        userValidator.validate(user,result);
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationErrorService(result);
         if (errorMap != null )
             return errorMap;

@@ -27,6 +27,7 @@ public class UserService  {
             newUser.setUsername(newUser.getUsername());
             //Make Sure Password and ConfirmPassword Match
             //Dont Persist ConfirmPass
+            newUser.setConfirmPassword("");
             return userRepository.save(newUser);
         }catch (Exception e)
         {
