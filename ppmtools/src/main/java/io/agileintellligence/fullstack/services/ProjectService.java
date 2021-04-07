@@ -9,6 +9,7 @@ import io.agileintellligence.fullstack.repositories.ProjectRepository;
 import io.agileintellligence.fullstack.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import io.agileintellligence.fullstack.exceptions.ProjectNotFoundException;
 
 @Service
 public class ProjectService {
@@ -22,58 +23,62 @@ public class ProjectService {
     @Autowired
     private UserRepository userRepository;
 
-    public Project saveOrUpdateProject(Project project,String username) {
-        try {
-
+    public Project saveOrUpdateProject(Project project, String username){
+        try{
             User user = userRepository.findByUsername(username);
             project.setUser(user);
             project.setProjectLeader(user.getUsername());
             project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
 
-
-            if (project.getId() == null) {
+            if(project.getId()==null){
                 Backlog backlog = new Backlog();
                 project.setBacklog(backlog);
                 backlog.setProject(project);
                 backlog.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
             }
-            if (project.getId() != null) {
+
+            if(project.getId()!=null){
                 project.setBacklog(backlogRepository.findByProjectIdentifier(project.getProjectIdentifier().toUpperCase()));
             }
+
             return projectRepository.save(project);
-        } catch (Exception e) {
-            throw new ProjectIdException("PROJECT ID " + project.getProjectIdentifier().toUpperCase() + " already exists");
+
+        }catch (Exception e){
+            throw new ProjectIdException("Project ID '"+project.getProjectIdentifier().toUpperCase()+"' already exists");
         }
 
     }
 
-    public Project findByProjectIdentifier(String projectId) {
+
+    public Project findProjectByIdentifier(String projectId, String username){
+
+        //Only want to return the project if the user looking for it is the owner
+
         Project project = projectRepository.findByProjectIdentifier(projectId.toUpperCase());
-        if (project == null) {
-            throw new ProjectIdException("Project ID " + projectId + " Does not exist");
+
+        if(project == null){
+            throw new ProjectIdException("Project ID '"+projectId+"' does not exist");
+
         }
+
+        if(!project.getProjectLeader().equals(username)){
+            throw new ProjectNotFoundException("Project not found in your account");
+        }
+
+
+
         return project;
     }
 
-    public Iterable<Project> findAllProjects() {
-        return projectRepository.findAll();
+    public Iterable<Project> findAllProjects(String username){
+        return projectRepository.findAllByProjectLeader(username);
     }
 
-    public void deleteProjectByProjectIdentifier(String projectId) {
-        Project project = projectRepository.findByProjectIdentifier(projectId);
-        if (project == null) {
-            throw new ProjectIdException("Project ID " + projectId + " does not exist");
-        }
-        projectRepository.delete(project);
-//    return "Project " + projectId + "has been deleted SuccessFully";
-    }
 
-    public Project updateProject(String projectId, Project project) {
-        Project project1 = findByProjectIdentifier(projectId);
-        projectRepository.delete(project1);
-        projectRepository.save(project);
-        return project;
-    }
+    public void deleteProjectByIdentifier(String projectid, String username){
 
+
+        projectRepository.delete(findProjectByIdentifier(projectid, username));
+    }
 
 }
