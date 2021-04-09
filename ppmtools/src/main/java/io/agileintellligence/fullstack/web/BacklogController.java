@@ -42,19 +42,19 @@ public class BacklogController {
     }
 
     @GetMapping("/{backlog_id}/{pt_id}")
-    public ResponseEntity<?> getProjectBySequence(@PathVariable String backlog_id, @PathVariable String pt_id) {
-        ProjectTask projectTask1 = projectTaskService.findByProjectSequence(backlog_id, pt_id);
+    public ResponseEntity<?> getProjectBySequence(@PathVariable String backlog_id, @PathVariable String pt_id,Principal principal) {
+        ProjectTask projectTask1 = projectTaskService.findByProjectSequence(backlog_id, pt_id,principal.getName());
         return new ResponseEntity<ProjectTask>(projectTask1, HttpStatus.OK);
     }
 
     @PatchMapping("/{backlog_id}/{pt_id}")
     public ResponseEntity<?> updateProjectTask(@Valid @RequestBody ProjectTask projectTask, BindingResult result,
-                                               @PathVariable String backlog_id, @PathVariable String pt_id ){
+                                               @PathVariable String backlog_id, @PathVariable String pt_id,Principal principal){
 
         ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationErrorService(result);
         if (errorMap != null) return errorMap;
 
-        ProjectTask updatedTask = projectTaskService.updateProject(projectTask,backlog_id,pt_id);
+        ProjectTask updatedTask = projectTaskService.updateProject(projectTask,backlog_id,pt_id,principal.getName());
 
         return new ResponseEntity<ProjectTask>(updatedTask,HttpStatus.OK);
 
@@ -62,8 +62,8 @@ public class BacklogController {
 
 
     @DeleteMapping("/{backlog_id}/{pt_id}")
-    public ResponseEntity<?> deleteProject(@PathVariable String backlog_id, @PathVariable String pt_id) {
-        projectTaskService.deleteProject(backlog_id,pt_id);
+    public ResponseEntity<?> deleteProject(@PathVariable String backlog_id, @PathVariable String pt_id,Principal principal) {
+        projectTaskService.deleteProject(backlog_id,pt_id,principal.getName());
         return new ResponseEntity<String>("Project with id:"+pt_id+" in the "+backlog_id+" has been deleted successfully",HttpStatus.OK);
 
     }
