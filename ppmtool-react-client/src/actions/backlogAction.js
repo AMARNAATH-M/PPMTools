@@ -12,7 +12,7 @@ export const addProjectTask = (backlog_id, project_task, history) => async (
 ) => {
   try {
     await axios.post(
-      `http://localhost:8080/api/backlog/${backlog_id}`,
+      `https://projectmanagement-amar.herokuapp.com/api/backlog/${backlog_id}`,
       project_task
     );
     history.push(`projectBoard/${backlog_id}`);
@@ -30,7 +30,7 @@ export const addProjectTask = (backlog_id, project_task, history) => async (
 export const getBacklog = (backlog_id) => async (dispatch) => {
   try {
     const res = await axios.get(
-      `http://localhost:8080/api/backlog/${backlog_id}`
+      `https://projectmanagement-amar.herokuapp.com/api/backlog/${backlog_id}`
     );
     dispatch({
       type: GET_BACKLOG,
@@ -48,7 +48,7 @@ export const getProjectTask = (backlog_id, pt_id, history) => async (
 ) => {
   try {
     const res = await axios.get(
-      `http://localhost:8080/api/backlog/${backlog_id}/${pt_id}`
+      `https://projectmanagement-amar.herokuapp.com/api/backlog/${backlog_id}/${pt_id}`
     );
     dispatch({
       type: GET_PROJECT_TASK,
@@ -66,7 +66,7 @@ export const updateProjectTask = (
 ) => async (dispatch) => {
   try {
     await axios.patch(
-      `http://localhost:8080/api/backlog/${backlog_id}/${pt_id}`,
+      `https://projectmanagement-amar.herokuapp.com/api/backlog/${backlog_id}/${pt_id}`,
       project_task
     );
     history.push(`/projectBoard/${backlog_id}`);
@@ -89,7 +89,7 @@ export const deleteProjectTask = (backlog_id, pt_id) => async (dispatch) => {
     )
   ) {
     await axios.delete(
-      `http://localhost:8080/api/backlog/${backlog_id}/${pt_id}`
+      `https://projectmanagement-amar.herokuapp.com/api/backlog/${backlog_id}/${pt_id}`
     );
     dispatch({
       type: DELETE_PROJECT_TASK,

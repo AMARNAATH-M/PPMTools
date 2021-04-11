@@ -49,6 +49,8 @@ class App extends Component {
             <Route exact path="/" component={Landing} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
+            <SecuredRoute exact path="/dashboard" component={Login} />
+            <SecuredRoute exact path="/addProject" component={Login} />
             {
               //PRIVATE ROUTES
             }
